@@ -10,8 +10,10 @@ print "Got the data\n";
 
 
 # Open a data file, print a headder
-$time = time();
-$file = "/www/files/parkrun_timer\_$time\_junsd_stopwatch.txt";
+#$time = time();
+# make it human readable
+$time = `date +%a-%b-%d-%H:%M:%S_junsd_stopwatch.txt`;
+$file = "/www/files/parkrun_timer\_$time";
 open(BARCODEFILE,">$file");
 
 

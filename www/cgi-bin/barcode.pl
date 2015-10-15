@@ -11,8 +11,9 @@ system("modprobe opticon");
 
 # Barcode routine 
 # Need to generate a date stamp for our barcode file
-$time = time();
-$barcodefile = "/www/files/parkrun_barcode_$time.txt";
+#$time = time();
+$time = `date +%a-%b-%d-%H:%M:%S.txt`;
+$barcodefile = "/www/files/parkrun_barcode_$time";
 open(BARCODEFILE,">$barcodefile");
 
 

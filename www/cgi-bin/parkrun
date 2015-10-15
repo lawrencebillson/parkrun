@@ -55,22 +55,100 @@ if ($buffer eq "delete") {
 	$menu++;
 	}
 
+
 if ($buffer eq "barcode") {
-	$status = `/www/cgi-bin/barcode.pl 2>&1`;
-	print "<hr>\n";
-	print "Downloading barcode\n";
-	print "<hr>\n";
-	print "Status: $status\n";
+	# Confirm that we've got a USB0 but not a USB1
+	$usbstat = `ls /dev/ttyUSB*`;
+	if (($usbstat =~ ttyUSB0) && (!($usbstat =~ ttyUSB1))) {
+		# We only have a single USB device, check that it's a pl2303
+		$driver = `dmesg | grep ttyUSB0 | tail -1`;
+		}
+
+	if ($driver =~ /opticon/) {
+		$status = `/www/cgi-bin/barcode.pl 2>&1`;
+		print "<hr>\n";
+		print "Downloading barcode\n";
+		print "<hr>\n";
+		print "Status: $status\n";
+		}
+	else {
+		print "BARCODE READER NOT DETECTED, check connections or restart the portable parkrun<hr>Debug: $usbstat<hr>\n";
+		print "<hr>\n";
+		}
 	print "<a href=/>Main Menu</a>\n";
 	$menu++;
 	}
 
+if ($buffer eq "barcodeclock") {
+	# Confirm that we've got a USB0 but not a USB1
+	$usbstat = `ls /dev/ttyUSB*`;
+	if (($usbstat =~ ttyUSB0) && (!($usbstat =~ ttyUSB1))) {
+		# We only have a single USB device, check that it's a pl2303
+		$driver = `dmesg | grep ttyUSB0 | tail -1`;
+		}
+
+	if ($driver =~ /opticon/) {
+		@status = `/www/cgi-bin/gettime.py 2>&1`;
+		# Need to figure out the time
+		foreach $sline (@status) {
+			if ($sline =~ /OpticonTime/) {
+				# We've got a useful date out of it! That's pretty awesome
+				print "Time from barcode scanner is $sline<br>\n";
+
+				($junk,$dmy,$hms) = split(' ',$sline);
+				($year,$month,$day) = split('-',$dmy);
+				($hour,$min,$sec) = split(':',$hms);
+
+				`date -s $year$month$day$hour$min$sec`;
+				$ndate = `date`; 
+				print "Time on parkrun portable is now $ndate<br>\n";
+				}
+#OpticonTime  2015-08-22 16:54:19
+#[YYYY.]MM.DD-hh:mm[:ss]
+#YYYY-MM-DD hh:mm[:ss]
+#[[[[[YY]YY]MM]DD]hh]mm[.ss]
+
+
+			}
+		print "<hr>\n";
+		#print "Status: $status\n";
+		}
+	else {
+		print "BARCODE READER NOT DETECTED, check connections or restart the portable parkrun<hr>Debug: $usbstat<hr>\n";
+		print "<hr>\n";
+		}
+	print "<a href=/>Main Menu</a>\n";
+	$menu++;
+	}
+
+
+
 if ($buffer eq "stopwatch") {
-	print "<hr>\n";
-	print "Download stopwatch NOW!\n";
-	print "<hr>\n";
+	# Confirm that we've got a USB0 but not a USB1
+	$usbstat = `ls /dev/ttyUSB*`;
+	if (($usbstat =~ ttyUSB0) && (!($usbstat =~ ttyUSB1))) {
+		# We only have a single USB device, check that it's a pl2303
+		$driver = `dmesg | grep ttyUSB0 | tail -1`;
+		}
+
+	if ($driver =~ /pl2303/) {
+		print "<hr>Stopwatch detected OK";
+		print "<hr>\n";
+		print "Click the link below<br> Wait 2 seconds then press the 'Upload', then 'Upload All' button on the stopwatch<br>\n";
+		print "<a href=/cgi-bin/parkrun?sdownload>Go</a>\n";
+		print "<hr>\n";
+		}
+	else {
+		print "STOPWATCH NOT DETECTED, check connections or restart the portable parkrun<hr>Debug: $usbstat<hr>\n";
+		print "<hr>\n";
+		}
+
+	print "<a href=/>Main Menu</a>\n";
+	$menu++;
+	}
 
 
+if ($buffer eq "sdownload") {
 	$status = `/www/cgi-bin/stopwatch.pl 2>&1`;
 	print "Status: $status\n";
 	print "<a href=/>Main Menu</a>\n";
@@ -82,12 +160,17 @@ if ($buffer eq "debug") {
 	print "<hr>\n";
 	$dmesg = `dmesg | grep USB0`;
 	print "$dmesg\n";
+
+	foreach $vart (sort keys %ENV) {
+		print "$vart = $ENV{$vart}<br>\n"
+		}
 	$menu++;
 	}
 
 
 if (!$menu) {
-	
+	print "<a href=/cgi-bin/parkrun?barcodeclock>Set Clock from Barcode Scanner</a>\n";
+	print "<br>\n";
 	print "<a href=/cgi-bin/parkrun?barcode>Read Barcodes</a>\n";
 	print "<br>\n";
 	print "<a href=/cgi-bin/parkrun?stopwatch>Read Stopwatch</a>\n";

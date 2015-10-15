@@ -198,6 +198,7 @@ class CS1504:
     s, mi, h, d, m, y = map(ord, data[3:9])
     y += 2000
     ts = datetime.datetime(y, m, d, h, mi, s)
+    print >> sys.stderr, 'OpticonTme ', ts
     # determine the clock drift so we can correct timestamps
     if calculate_drift:
       self.delta = now - ts
@@ -322,7 +323,7 @@ if __name__ == '__main__':
   scanner = CS1504(serial_port)
   scanner.interrogate()
   scanner.get_time()
-  scanner.set_time()
+#  scanner.set_time()
   barcodes = scanner.get_barcodes()
   for symbology, code, timestamp in barcodes:
     print '%s,%s,%s' % (symbology, code, str(timestamp).split('.')[0])
