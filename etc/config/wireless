@@ -11,4 +11,4 @@ config wifi-iface
 	option mode     ap
 	option ssid     parkrunPortable
 	option encryption psk2
-	option key	goatsegoatse
+	option key	bushypark

@@ -29,14 +29,16 @@ print "<head>\n";
 print "<img src=/parkrunlogo.jpg>\n";
 print "<br>\n";
 print "<title>parkrun Stopwatch / Barcode Downloader</title>";
+print "<meta name=\"viewport\" content=\"initial-scale = 1.15,maximum-scale = 3.0\" />\n";
 print "</head>";
 print "<body>";
+print "parkrunPortable v1.1\n";
 
 
 if ($buffer eq "reallydelete") {
 	print "<hr>Deleting<hr>\n";
 	`rm /www/files/*`;
-	print "<a href=/>Main Menu</a>\n";
+	print "<a href=/><button style=\"width:200;height:24;\">Main Menu</button></a>\n";
 	$menu++;
 	}
 
@@ -48,9 +50,10 @@ if ($buffer eq "delete") {
 		print "$file<br>\n"
 		}
 	print "<hr>\n";
-	print "<a href=/cgi-bin/parkrun?reallydelete>Really Delete Downloaded Files</a>\n";
+	print "<a href=/cgi-bin/parkrun?reallydelete><button style=\"width:200;height:24;\">Yes, Really Delete</button></a>\n";
 	print "<br>\n";
-	print "<a href=/>No! GO BACK!</a>\n";
+	print "<br>\n";
+	print "<a href=/><button style=\"width:200;height:24;\">NO! Go Back!</button></a>\n";
 	print "<hr>\n";
 	$menu++;
 	}
@@ -72,10 +75,11 @@ if ($buffer eq "barcode") {
 		print "Status: $status\n";
 		}
 	else {
-		print "BARCODE READER NOT DETECTED, check connections or restart the portable parkrun<hr>Debug: $usbstat<hr>\n";
+		print "BARCODE READER NOT DETECTED, check connections or restart the parkrun portable<hr>Debug: $usbstat<hr>\n";
 		print "<hr>\n";
 		}
-	print "<a href=/>Main Menu</a>\n";
+	print "<hr>\n";
+	print "<a href=/><button style=\"width:200;height:24;\">Main Menu</button></a>\n";
 	$menu++;
 	}
 
@@ -92,6 +96,7 @@ if ($buffer eq "barcodeclock") {
 		# Need to figure out the time
 		foreach $sline (@status) {
 			if ($sline =~ /OpticonTime/) {
+				print "<hr>\n";
 				# We've got a useful date out of it! That's pretty awesome
 				print "Time from barcode scanner is $sline<br>\n";
 
@@ -117,7 +122,7 @@ if ($buffer eq "barcodeclock") {
 		print "BARCODE READER NOT DETECTED, check connections or restart the portable parkrun<hr>Debug: $usbstat<hr>\n";
 		print "<hr>\n";
 		}
-	print "<a href=/>Main Menu</a>\n";
+	print "<a href=/><button style=\"width:200;height:24;\">Main Menu</button></a>\n";
 	$menu++;
 	}
 
@@ -134,8 +139,8 @@ if ($buffer eq "stopwatch") {
 	if ($driver =~ /pl2303/) {
 		print "<hr>Stopwatch detected OK";
 		print "<hr>\n";
-		print "Click the link below<br> Wait 2 seconds then press the 'Upload', then 'Upload All' button on the stopwatch<br>\n";
-		print "<a href=/cgi-bin/parkrun?sdownload>Go</a>\n";
+		print "Click the button below<br> Wait 2 seconds then press the 'Upload', then 'Upload All' button on the stopwatch<br>\n";
+		print "<a href=/cgi-bin/parkrun?sdownload><button style=\"width:200;height:24;\">Go</button></a>\n";
 		print "<hr>\n";
 		}
 	else {
@@ -143,7 +148,7 @@ if ($buffer eq "stopwatch") {
 		print "<hr>\n";
 		}
 
-	print "<a href=/>Main Menu</a>\n";
+	print "<a href=/><button style=\"width:200;height:24;\">Main Menu</button></a>\n";
 	$menu++;
 	}
 
@@ -151,7 +156,7 @@ if ($buffer eq "stopwatch") {
 if ($buffer eq "sdownload") {
 	$status = `/www/cgi-bin/stopwatch.pl 2>&1`;
 	print "Status: $status\n";
-	print "<a href=/>Main Menu</a>\n";
+	print "<a href=/><button style=\"width:200;height:24;\">Main Menu</button></a>\n";
 	print "<hr>\n";
 	$menu++;
 	}
@@ -169,16 +174,22 @@ if ($buffer eq "debug") {
 
 
 if (!$menu) {
-	print "<a href=/cgi-bin/parkrun?barcodeclock>Set Clock from Barcode Scanner</a>\n";
+	print "<hr>";
+	print "<a href=/cgi-bin/parkrun?barcodeclock><button style=\"width:200;height:24;\">Set Clock from Barcode Scanner</button></a>\n";
 	print "<br>\n";
-	print "<a href=/cgi-bin/parkrun?barcode>Read Barcodes</a>\n";
 	print "<br>\n";
-	print "<a href=/cgi-bin/parkrun?stopwatch>Read Stopwatch</a>\n";
+	print "<a href=/cgi-bin/parkrun?barcode><button style=\"width:200;height:24;\">Read Barcodes</button></a>\n";
 	print "<br>\n";
-	print "<a href=/cgi-bin/parkrun?delete>Delete Downloaded Data</a>\n";
 	print "<br>\n";
-	print "<a href=/files/>Download Files</a>\n";
+	print "<a href=/cgi-bin/parkrun?stopwatch><button style=\"width:200;height:24;\">Read Stopwatch</button></a>\n";
+	print "<br>\n";
+	print "<br>\n";
+	print "<a href=/cgi-bin/parkrun?delete><button style=\"width:200;height:24;\">Delete Downloaded Data</button></a>\n";
+	print "<br>\n";
+	print "<br>\n";
+	print "<a href=/files/><button style=\"width:200;height:24;\">Download Files</button></a>\n";
 	print "<hr>\n";
+	print "</form>\n";
 	}
 
 print "</html>";
