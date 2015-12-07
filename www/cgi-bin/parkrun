@@ -42,6 +42,13 @@ if ($buffer eq "reallydelete") {
 	$menu++;
 	}
 
+if ($buffer eq "upgrade") {
+	print "<hr>Upgrading parkrun portable<hr>\n";
+	print "<hr>NOT YET IMPLEMENTED<hr>\n";
+	print "<a href=/><button style=\"width:200;height:24;\">Main Menu</button></a>\n";
+	$menu++;
+	}
+
 if ($buffer eq "delete") {
 	print "<hr>\n";
 	print "About to delete the following files:<br>\n";
@@ -190,6 +197,7 @@ if (!$menu) {
 	print "<a href=/files/><button style=\"width:200;height:24;\">Download Files</button></a>\n";
 	print "<hr>\n";
 	print "</form>\n";
+	print "<a href=/cgi-bin/pakrun?upgrade>Upgrade from USB</a>\n";
 	}
 
 print "</html>";
