@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+# Debug mode?
+#$debug = 1;
 
     local ($buffer, @pairs, $pair, $name, $value, %FORM);
     # Read in text
@@ -16,6 +18,10 @@
 	$value =~ tr/+/ /;
 	$value =~ s/%(..)/pack("C", hex($1))/eg;
 	$FORM{$name} = $value;
+	if ($name eq "deleteselected") {
+		push @delete, $value;
+		}
+		
     }
     #$first_name = $FORM{first_name};
 
@@ -26,21 +32,51 @@ print "Content-type:text/html\r\n\r\n";
 print "<html>\n";
 print "<head>\n";
 #print "<h2>parkrun Stopwatch / Barcode Downloader</h2>";
-print "<img src=/parkrunlogo.jpg>\n";
+print "<a href=/><img src=/parkrunlogo.jpg></a>\n";
 print "<br>\n";
 print "<title>parkrun Stopwatch / Barcode Downloader</title>";
 print "<meta name=\"viewport\" content=\"initial-scale = 1.15,maximum-scale = 3.0\" />\n";
 print "</head>";
 print "<body>";
-print "parkrunPortable v1.1\n";
+print "parkrunPortable v1.2\n";
+
+if ($debug) {
+	print "Debugging data:";
+	print "Buffer is $buffer\n<br>\n";
+	foreach $debugkey (sort keys %FORM) {
+		print "Form key $debugkey\n";
+		print "Value is $FORM{$debugkey}<br>\n";
+		}
+
+	foreach $debugkey (sort keys %ENV) {
+		print "ENV key $debugkey\n";
+		print "Value is $ENV{$debugkey}<br>\n";
+		}
 
 
-if ($buffer eq "reallydelete") {
+	}
+
+if ($buffer eq "deleteall") {
 	print "<hr>Deleting<hr>\n";
 	`rm /www/files/*`;
 	print "<a href=/><button style=\"width:200;height:24;\">Main Menu</button></a>\n";
 	$menu++;
 	}
+
+if ($FORM{"deleteselected"}) {
+	print "<hr>Deleting Selected Files<hr>\n";
+	
+	# Cycle through our list of inodes to unlink
+	foreach $delfile (@delete) { 
+		print "Deleted $delfile<br>\n";
+		`rm /www/files/$delfile`;
+		}
+
+	print "<hr>\n";
+	print "<a href=/><button style=\"width:200;height:24;\">Main Menu</button></a>\n";
+	$menu++;
+	}
+
 
 if ($buffer eq "upgrade") {
 	print "<hr>Upgrading parkrun portable<hr>\n";
@@ -51,16 +87,22 @@ if ($buffer eq "upgrade") {
 
 if ($buffer eq "delete") {
 	print "<hr>\n";
-	print "About to delete the following files:<br>\n";
-	@files = `ls -l /www/files`;
+	print "Delete the following files:<br>\n";
+
+	print "<form action=\"/cgi-bin/parkrun\" method=\"get\">\n";
+	@files = `ls /www/files`;
 	foreach $file (@files) {
-		print "$file<br>\n"
+		$wcl = `wc -l /www/files/$file`;
+		($num,$wcname) = split(' ',$wcl);
+		print "     <input type=\"checkbox\" name=\"deleteselected\" value=\"$file\">$file ($num lines)<br><br>\n";
 		}
 	print "<hr>\n";
-	print "<a href=/cgi-bin/parkrun?reallydelete><button style=\"width:200;height:24;\">Yes, Really Delete</button></a>\n";
+	#print "<input type=\"submit\" style=\"width:300;height:24;\" value=\"Delete Selected Files\"><br>\n";
+	print "<a href=/cgi-bin/parkrun?deleteselected><button style=\"width:200;height:24;\">Delete Selected Files</button></a><br><br>\n";
+	print "</form>\n";
 	print "<br>\n";
-	print "<br>\n";
-	print "<a href=/><button style=\"width:200;height:24;\">NO! Go Back!</button></a>\n";
+	print "<a href=/><button style=\"width:200;height:24;\">Main Menu</button></a><br><br>\n";
+	#print "<a href=/cgi-bin/parkrun?deleteall>Delete ALL files!</a>\n";
 	print "<hr>\n";
 	$menu++;
 	}
@@ -75,6 +117,7 @@ if ($buffer eq "barcode") {
 		}
 
 	if ($driver =~ /opticon/) {
+		sleep 1;
 		$status = `/www/cgi-bin/barcode.pl 2>&1`;
 		print "<hr>\n";
 		print "Downloading barcode\n";
@@ -144,10 +187,10 @@ if ($buffer eq "stopwatch") {
 		}
 
 	if ($driver =~ /pl2303/) {
-		print "<hr>Stopwatch detected OK";
-		print "<hr>\n";
-		print "Click the button below<br> Wait 2 seconds then press the 'Upload', then 'Upload All' button on the stopwatch<br>\n";
-		print "<a href=/cgi-bin/parkrun?sdownload><button style=\"width:200;height:24;\">Go</button></a>\n";
+		# Run the stopwatch program in the background
+		`sh -c /www/cgi-bin/bgstopwatch.sh`;
+		sleep 2;
+		print "<hr>Stopwatch detected OK - parkrun portable will listen out for any uploads from your stopwatch. Select Upload All and check in the downloads folder<br>";
 		print "<hr>\n";
 		}
 	else {
@@ -196,8 +239,7 @@ if (!$menu) {
 	print "<br>\n";
 	print "<a href=/files/><button style=\"width:200;height:24;\">Download Files</button></a>\n";
 	print "<hr>\n";
-	print "</form>\n";
-	print "<a href=/cgi-bin/pakrun?upgrade>Upgrade from USB</a>\n";
+	print "<a href=/cgi-bin/parkrun?upgrade>Upgrade from USB</a>\n";
 	}
 
 print "</html>";

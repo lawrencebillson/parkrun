@@ -3,6 +3,8 @@
 # Lawrence Billson, 2015, Creative Commons license
 #
 
+# We should kill any other python sessions
+system('killall -9 python 2> /dev/null');
 
 print "Upload data from the stopwatch now\n";
 $datain = `/www/cgi-bin/readserial.py`;

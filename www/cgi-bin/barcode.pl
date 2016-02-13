@@ -3,8 +3,8 @@
 # Lawrence Billson, 2015, Creative Commons license
 # 
 # Reset the USB modules
+system("killall -9 python");
 system("rmmod -f opticon; rmmod -f usbserial");
-sleep 1;
 system("modprobe opticon");
 #
 
@@ -56,4 +56,9 @@ foreach $line (@data) {
 	}
 close(BARCODEFILE);
 
+# delete any zero length files left behind
+`find /www/files/ -size 0 -type f -exec rm {} \\; > /tmp/rm 2>&1`;
+
+
+exit(0);
 

@@ -3,6 +3,7 @@ Some user requests:
 1) Design an auto-upgrade method - allow a user to upgrade their software via USB or Internet
 2) Some kind of remote Internet debugging
 3) Better error handling for stopwatch data - sometimes we get two events in a stopwatch. We will always pick event 1, it could get both in different files
+4) Select which files you'd like to delete
 
 Let me know if you want more!
 
