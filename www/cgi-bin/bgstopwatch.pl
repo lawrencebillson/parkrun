@@ -89,6 +89,7 @@ while ($line = <DATAIN>) {
 
 	# Fake stop time
 	$min++;
+	$min = sprintf("%.2d",$min);
 	print FOUT "ENDOFEVENT,$bogus $hour:$min:$sec\n";
 	close(FOUT);
 	print LOUT "$time -  Got $place records in one stopwatch frame\n";

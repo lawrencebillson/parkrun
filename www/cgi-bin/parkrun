@@ -38,7 +38,7 @@ print "<title>parkrun Stopwatch / Barcode Downloader</title>";
 print "<meta name=\"viewport\" content=\"initial-scale = 1.15,maximum-scale = 3.0\" />\n";
 print "</head>";
 print "<body>";
-print "parkrunPortable v1.2\n";
+print "parkrunPortable v1.3, Lawrence Billson\n";
 
 if ($debug) {
 	print "Debugging data:";
@@ -120,16 +120,25 @@ if ($buffer eq "barcode") {
 		sleep 1;
 		$status = `/www/cgi-bin/barcode.pl 2>&1`;
 		print "<hr>\n";
-		print "Downloading barcode\n";
+		@status = split('\n',$status);
+		foreach $bstatusline (@status) { 
+			if ($bstatusline =~ /reading barcodes/) {
+				print "$bstatusline";
+				}
+			}
 		print "<hr>\n";
-		print "Status: $status\n";
 		}
 	else {
 		print "BARCODE READER NOT DETECTED, check connections or restart the parkrun portable<hr>Debug: $usbstat<hr>\n";
 		print "<hr>\n";
 		}
-	print "<hr>\n";
 	print "<a href=/><button style=\"width:200;height:24;\">Main Menu</button></a>\n";
+	if ($driver =~ /opticon/) {
+		print "<hr>\n";
+		print "Geek messages - $status\n";
+		}
+
+
 	$menu++;
 	}
 
@@ -190,10 +199,11 @@ if ($buffer eq "stopwatch") {
 		# Run the stopwatch program in the background
 		`sh -c /www/cgi-bin/bgstopwatch.sh`;
 		sleep 2;
-		print "<hr>Stopwatch detected OK - parkrun portable will listen out for any uploads from your stopwatch. Select Upload All and check in the downloads folder<br>";
+		print "<hr>Stopwatch detected OK - parkrun portable will listen out for any uploads from your stopwatch.<br>";
 		print "<hr>\n";
 		}
 	else {
+		print "<hr>\n";
 		print "STOPWATCH NOT DETECTED, check connections or restart the portable parkrun<hr>Debug: $usbstat<hr>\n";
 		print "<hr>\n";
 		}
@@ -225,6 +235,17 @@ if ($buffer eq "debug") {
 
 if (!$menu) {
 	print "<hr>";
+
+	# are we in background stopwatch mode? 
+	$bgps = `ps | grep bgstopwatch | grep -v grep`;
+	chomp($bgps);
+	if ($bgps =~ /perl/) {
+		# We've got reasonable assurance that we're listening for stopwatch data
+		print "Stopwatch detected, select UPLOAD ALL on the stopwatch, then check in Download Files\n";
+		print "<br>\n";
+		print "<hr>";
+		}
+
 	print "<a href=/cgi-bin/parkrun?barcodeclock><button style=\"width:200;height:24;\">Set Clock from Barcode Scanner</button></a>\n";
 	print "<br>\n";
 	print "<br>\n";
@@ -234,10 +255,10 @@ if (!$menu) {
 	print "<a href=/cgi-bin/parkrun?stopwatch><button style=\"width:200;height:24;\">Read Stopwatch</button></a>\n";
 	print "<br>\n";
 	print "<br>\n";
-	print "<a href=/cgi-bin/parkrun?delete><button style=\"width:200;height:24;\">Delete Downloaded Data</button></a>\n";
-	print "<br>\n";
-	print "<br>\n";
 	print "<a href=/files/><button style=\"width:200;height:24;\">Download Files</button></a>\n";
+	print "<br>\n";
+	print "<br>\n";
+	print "<a href=/cgi-bin/parkrun?delete><button style=\"width:200;height:24;\">Delete Downloaded Data</button></a>\n";
 	print "<hr>\n";
 	print "<a href=/cgi-bin/parkrun?upgrade>Upgrade from USB</a>\n";
 	}
