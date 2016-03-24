@@ -15,7 +15,7 @@ echo ### Downloading parkrun portable software from GitHub
 wget --no-check-certificate -qO- http://github.com/lawrencebillson/parkrun/archive/master.tar.gz | (cd /tmp ; tar -xvzf -)
 # 
 echo ### Installing the Opticon barcode drvier
-opkg install -nodeps /tmp/parkrun-master/tmp/kmod-usb-serial-opticon_3.18.23-1_ramips_24kec.ipk
+opkg install -nodeps /tmp/parkrun-master/tmp/kmod-usb-serial-opticon_3.18.20-1_ramips_24kec.ipk
 # 
 echo ### Copying the portable parkrun software into its final location
 cd /tmp/parkrun-master ; tar -cf - . | (cd / ; tar -xvf -)
