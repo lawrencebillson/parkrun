@@ -18,7 +18,7 @@ echo *** Installing the Opticon barcode drvier
 opkg install /tmp/parkrun-master/tmp/kmod-usb-serial-opticon_3.18.23-1_ramips_24kec.ipk
 # 
 echo *** Copying the portable parkrun software into its final location
-cd /tmp/parkrun-master ; tar -cf - . | (cd /home/lawrence/target ; tar -xvf -)
+cd /tmp/parkrun-master ; tar -cf - . | (cd / ; tar -xvf -)
 echo *** Done - Rebooting in 20 seconds
 sleep 20
 reboot
