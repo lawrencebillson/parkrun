@@ -79,7 +79,7 @@ if ($FORM{"deleteselected"}) {
 
 
 if ($buffer eq "upgrade") {
-	print "<hr>Upgrading parkrun portable<hr>\n";
+	print "<hr>Upgrading parkrunPortable<hr>\n";
 	print "<hr>NOT YET IMPLEMENTED<hr>\n";
 	print "<a href=/><button style=\"width:200;height:24;\">Main Menu</button></a>\n";
 	$menu++;
@@ -129,7 +129,7 @@ if ($buffer eq "barcode") {
 		print "<hr>\n";
 		}
 	else {
-		print "BARCODE READER NOT DETECTED, check connections or restart the parkrun portable<hr>Debug: $usbstat<hr>\n";
+		print "BARCODE READER NOT DETECTED, check connections or restart the parkrunPortable<hr>Debug: $usbstat<hr>\n";
 		print "<hr>\n";
 		}
 	print "<a href=/><button style=\"width:200;height:24;\">Main Menu</button></a>\n";
@@ -165,7 +165,7 @@ if ($buffer eq "barcodeclock") {
 
 				`date -s $year$month$day$hour$min$sec`;
 				$ndate = `date`; 
-				print "Time on parkrun portable is now $ndate<br>\n";
+				print "Time on parkrunPortable is now $ndate<br>\n";
 				}
 #OpticonTime  2015-08-22 16:54:19
 #[YYYY.]MM.DD-hh:mm[:ss]
@@ -178,7 +178,7 @@ if ($buffer eq "barcodeclock") {
 		#print "Status: $status\n";
 		}
 	else {
-		print "BARCODE READER NOT DETECTED, check connections or restart the portable parkrun<hr>Debug: $usbstat<hr>\n";
+		print "BARCODE READER NOT DETECTED, check connections or restart the parkrunPortable<hr>Debug: $usbstat<hr>\n";
 		print "<hr>\n";
 		}
 	print "<a href=/><button style=\"width:200;height:24;\">Main Menu</button></a>\n";
@@ -199,12 +199,12 @@ if ($buffer eq "stopwatch") {
 		# Run the stopwatch program in the background
 		`sh -c /www/cgi-bin/bgstopwatch.sh`;
 		sleep 2;
-		print "<hr>Stopwatch detected OK - parkrun portable will listen out for any uploads from your stopwatch.<br>";
+		print "<hr>Stopwatch detected OK - parkrunPortable will listen out for any uploads from your stopwatch.<br>";
 		print "<hr>\n";
 		}
 	else {
 		print "<hr>\n";
-		print "STOPWATCH NOT DETECTED, check connections or restart the portable parkrun<hr>Debug: $usbstat<hr>\n";
+		print "STOPWATCH NOT DETECTED, check connections or restart the parkrunPortable<hr>Debug: $usbstat<hr>\n";
 		print "<hr>\n";
 		}
 
