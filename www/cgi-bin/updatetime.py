@@ -127,12 +127,7 @@ class CS1504:
     while not connected:
       try:
         attempts += 1
-        self.ser = serial.Serial(port,
-                                 baudrate=9600,
-                                 bytesize=8,
-                                 parity=serial.PARITY_ODD,
-                                 stopbits=serial.STOPBITS_ONE,
-                                 timeout=2)
+	self.ser = serial.Serial("/dev/ttyUSB0", 9600, timeout=0.5)
         connected = True
       except serial.SerialException:
         if attempts <= 3:
