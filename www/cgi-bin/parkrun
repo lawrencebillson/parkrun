@@ -38,7 +38,7 @@ print "<title>parkrun Stopwatch / Barcode Downloader</title>";
 print "<meta name=\"viewport\" content=\"initial-scale = 1.15,maximum-scale = 3.0\" />\n";
 print "</head>";
 print "<body>";
-print "parkrunPortable v1.3, Lawrence Billson\n";
+print "parkrunPortable v1.4, Lawrence Billson\n";
 
 if ($debug) {
 	print "Debugging data:";
@@ -79,9 +79,35 @@ if ($FORM{"deleteselected"}) {
 
 
 if ($buffer eq "upgrade") {
-	print "<hr>Upgrading parkrunPortable<hr>\n";
-	print "<hr>NOT YET IMPLEMENTED<hr>\n";
-	print "<a href=/><button style=\"width:200;height:24;\">Main Menu</button></a>\n";
+	# Let's actually do this thing
+	system("mkdir /tmp/a; mount /dev/sdb1 /tmp/a");
+	sleep 1;
+	# Is the thing mounted?
+	$mount = `df -k`;
+	if (!($mount =~ '/tmp/a')) { 
+		# We've mounted the USB stick
+		print "<hr>USB memory not detected - check that it is formatted FAT32, reboot parkrunPortable and try again\n";
+		}
+	else {
+		# The filesystem is mounted! 
+		print "<hr>USB Stick detected - searching for parkrunupgrade.bin\n";
+		$file = `cd /tmp/a ; ls`;
+		print "<hr>Files detected: $file\n";
+		#
+		# Strings the file, the first line should have something useful in it
+		$firstline = `strings /tmp/a/parkrunupgrade.bin | head -1`;
+		if ($firstline =~ /OpenWrt/) {
+			print "<hr>Valid image found - commencing upgrade. DO NOT POWER OFF! - The upgrade takes 3-4 minutes. The blue light will stop flashing when the task is complete\n";
+			system("sysupgrade -n /tmp/a/parkrunupgrade.bin");	
+			}
+		else {
+			print "<hr>No Valid Image found\n";
+			system("umount -f /tmp/a");
+			}
+				
+		}	
+
+	print "<hr><a href=/><button style=\"width:200;height:24;\">Main Menu</button></a>\n";
 	$menu++;
 	}
 
