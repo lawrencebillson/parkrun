@@ -19,8 +19,7 @@ while (1) {
 		chomp($dev);	
 		# If we didn't know about it - let's report it	
 		if (!$known{$dev}) {
-			system("echo ./usbbarcode.pl $dev &");
-			system("./usbbarcode.pl $dev &");
+			system("/www/cgi-bin/usbbarcode.pl $dev &");
 			$known{$dev} = $dev;
 			}
 		$thisround{$dev} = 1;
