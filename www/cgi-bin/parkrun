@@ -38,7 +38,7 @@ print "<title>parkrun Stopwatch / Barcode Downloader</title>";
 print "<meta name=\"viewport\" content=\"initial-scale = 1.15,maximum-scale = 3.0\" />\n";
 print "</head>";
 print "<body>";
-print "parkrunPortable v1.5, Lawrence Billson\n";
+print "parkrunPortable v1.5a, Lawrence Billson\n";
 
 if ($debug) {
 	print "Debugging data:";
