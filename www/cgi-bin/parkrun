@@ -38,7 +38,7 @@ print "<title>parkrun Stopwatch / Barcode Downloader</title>";
 print "<meta name=\"viewport\" content=\"initial-scale = 1.15,maximum-scale = 3.0\" />\n";
 print "</head>";
 print "<body>";
-print "parkrunPortable v1.5a, Lawrence Billson\n";
+print "parkrunPortable v1.6, Lawrence Billson\n";
 
 if ($debug) {
 	print "Debugging data:";
@@ -278,9 +278,9 @@ if (!$menu) {
 	print "<a href=/cgi-bin/parkrun?barcode><button style=\"width:200;height:24;\">Read Barcodes</button></a>\n";
 	print "<br>\n";
 	print "<br>\n";
-	print "<a href=/cgi-bin/parkrun?stopwatch><button style=\"width:200;height:24;\">Read Stopwatch</button></a>\n";
-	print "<br>\n";
-	print "<br>\n";
+#	print "<a href=/cgi-bin/parkrun?stopwatch><button style=\"width:200;height:24;\">Read Stopwatch</button></a>\n";
+#	print "<br>\n";
+#	print "<br>\n";
 	print "<a href=/files/><button style=\"width:200;height:24;\">Download Files</button></a>\n";
 	print "<br>\n";
 	print "<br>\n";

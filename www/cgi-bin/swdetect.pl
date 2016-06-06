@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 # A script that looks for barcode scanners, executes and kills monitoring processes
+# Modified again - parkrunPortable 1.6 - detects pl2303 devices and kicks off the stopwatch download
 # 
 
 while (1) {
@@ -32,6 +33,28 @@ while (1) {
 			delete $known{$findkey};
 			}
 		}
+
+	# While we're at it, let's see if we've got stopwatch
+        $usbstat = `ls /dev/ttyUSB*`;                                                                                          
+        if (($usbstat =~ ttyUSB0) && (!($usbstat =~ ttyUSB1))) {                                                               
+                # We only have a single USB device, check that it's a pl2303                                                   
+                $driver = `dmesg | grep ttyUSB0 | tail -1`;                                                                    
+                }                                                                                                              
+               
+	                                                                                                                
+        if ($driver =~ /pl2303/) {                                                                                             
+		# Are we already running?
+        	$bgps = `ps | grep bgstopwatch | grep -v grep`;      
+	        chomp($bgps);                                         
+	        if (!($bgps =~ /perl/)) {     
+			# We're not already running
+                	`sh -c /www/cgi-bin/bgstopwatch.sh`;                                                                           
+			}
+                }                                        
+
+
+	$driver = "";
+
 
 	sleep 1;
 	}
